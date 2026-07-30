@@ -33,7 +33,12 @@ body {
     var(--ink);
   font-family: var(--body);
   font-weight: 700;
-  overflow-x: hidden;
+  /*
+   * Clip the wide collage without turning <body> into its own scroll area.
+   * With `hidden`, the other axis computes to `auto` and iOS can trap touch
+   * scrolling in a body-sized container while the page assets are loading.
+   */
+  overflow-x: clip;
 }
 
 body::before {
