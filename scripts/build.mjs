@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 const output = resolve(root, 'dist');
-const files = ['index.html', 'styles.css', 'script.js', 'robots.txt', 'sitemap.xml'];
+const files = ['index.html', 'styles-v2.css', 'script.js', 'robots.txt', 'sitemap.xml'];
 const assetDirectory = 'assets';
 
 for (const file of files) {
@@ -22,7 +22,7 @@ const requiredText = [
   'prefers-reduced-motion'
 ];
 
-const combined = `${html}\n${await readFile(resolve(root, 'styles.css'), 'utf8')}`;
+const combined = `${html}\n${await readFile(resolve(root, 'styles-v2.css'), 'utf8')}`;
 for (const text of requiredText) {
   if (!combined.includes(text)) throw new Error(`Missing required content: ${text}`);
 }
