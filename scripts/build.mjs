@@ -5,12 +5,14 @@ import { resolve } from 'node:path';
 const root = resolve(import.meta.dirname, '..');
 const output = resolve(root, 'dist');
 const files = ['index.html', 'styles-v2.css', 'script.js', 'robots.txt', 'sitemap.xml'];
-const assetDirectory = 'assets';
+const directories = ['assets', 'onepiece'];
 
 for (const file of files) {
   await access(resolve(root, file), constants.R_OK);
 }
-await access(resolve(root, assetDirectory), constants.R_OK);
+for (const directory of directories) {
+  await access(resolve(root, directory), constants.R_OK);
+}
 
 const html = await readFile(resolve(root, 'index.html'), 'utf8');
 const requiredText = [
@@ -33,6 +35,8 @@ await mkdir(output, { recursive: true });
 for (const file of files) {
   await copyFile(resolve(root, file), resolve(output, file));
 }
-await cp(resolve(root, assetDirectory), resolve(output, assetDirectory), { recursive: true });
+for (const directory of directories) {
+  await cp(resolve(root, directory), resolve(output, directory), { recursive: true });
+}
 
-console.log(`Built THE PAN mock: ${files.length} files + ${assetDirectory}/ → dist/`);
+console.log(`Built THE PAN mock: ${files.length} files + ${directories.join(', ')} → dist/`);
