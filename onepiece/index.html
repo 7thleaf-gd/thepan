@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+  <meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+  <meta name="referrer" content="no-referrer">
+  <title>FIELD MANUAL 001</title>
+  <style>
+    :root{
+      color-scheme: light;
+      --ink:#111;
+      --paper:#fff;
+      --line:#111;
+      --muted:#6b6b6b;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#fff;color:var(--ink);font-family:Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif}
+    body{overflow-x:hidden}
+    .breath{
+      position:fixed;inset:0;z-index:30;display:grid;place-items:center;
+      background:#fff;transition:opacity .45s ease,background .45s ease;
+    }
+    .breath.compact{
+      inset:auto 14px 14px auto;width:auto;height:auto;background:transparent;
+      place-items:end;pointer-events:none;
+    }
+    .breath.done{opacity:0;pointer-events:none}
+    .breath-card{text-align:center;min-width:180px}
+    .breath.compact .breath-card{text-align:right;min-width:0}
+    .signal{font:700 10px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.18em;margin-bottom:22px}
+    .breath.compact .signal{display:none}
+    .phase{font-size:clamp(22px,6vw,44px);font-weight:700;letter-spacing:.02em;transition:transform 1s ease,opacity .25s ease}
+    .count{margin-top:12px;font:700 12px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.12em}
+    .breath.compact .phase{font-size:13px}
+    .breath.compact .count{font-size:10px;margin-top:4px}
+    .breath[data-phase="inhale"] .phase{animation:inhale 3s ease-in forwards}
+    .breath[data-phase="hold"] .phase{transform:scale(1.08)}
+    .breath[data-phase="exhale"] .phase{animation:exhale 7s ease-out forwards}
+    @keyframes inhale{from{transform:scale(.92)}to{transform:scale(1.08)}}
+    @keyframes exhale{from{transform:scale(1.08)}to{transform:scale(.92)}}
+
+    main{width:min(760px,100%);margin:0 auto;padding:110px 18px 90px;visibility:hidden}
+    body.reveal main{visibility:visible}
+    .stack{display:flex;flex-direction:column;align-items:center}
+    .paper{
+      width:min(680px,100%);background:var(--paper);border:1.5px solid var(--line);
+      padding:clamp(22px,5vw,46px);box-shadow:0 18px 40px rgba(0,0,0,.12);
+      margin:-1px 0 24px;transform:translateY(-125vh) rotate(var(--r,0deg));
+      opacity:.98;transition:transform 1.15s cubic-bezier(.17,.89,.32,1.25),box-shadow .45s ease;
+      transition-delay:var(--d,0s);
+    }
+    body.reveal .paper{transform:translateY(0) rotate(var(--r,0deg))}
+    .paper:nth-child(2n){margin-left:clamp(0px,4vw,34px)}
+    .paper:nth-child(3n){margin-right:clamp(0px,3vw,24px)}
+    .kicker{font:700 10px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase}
+    h1{font-size:clamp(38px,10vw,78px);line-height:.9;margin:16px 0 26px;letter-spacing:-.055em}
+    h2{font-size:clamp(25px,6vw,42px);line-height:1.02;margin:10px 0 22px;letter-spacing:-.035em}
+    p{font-size:clamp(16px,3.8vw,20px);line-height:1.95;margin:0}
+    p+p{margin-top:1em}
+    .num{font:700 12px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.15em;margin-bottom:18px}
+    .note{font-size:13px;color:var(--muted);line-height:1.75}
+    .question{font-size:clamp(31px,8vw,66px);font-weight:700;line-height:1.05;letter-spacing:-.045em}
+    .footer{text-align:center;margin-top:26px;font:700 9px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.2em}
+    @media (max-width:560px){
+      main{padding-top:88px}
+      .paper{padding:24px 20px;margin-bottom:17px}
+      .paper:nth-child(n){margin-left:0;margin-right:0}
+    }
+    @media (prefers-reduced-motion:reduce){
+      .phase{animation:none!important}
+      .paper{transition:opacity .3s ease;transform:none!important;opacity:0}
+      body.reveal .paper{opacity:1}
+    }
+  </style>
+</head>
+<body>
+  <div class="breath" id="breath" data-phase="inhale" aria-live="polite">
+    <div class="breath-card">
+      <div class="signal">LOOK WITHOUT LOOKING.</div>
+      <div class="phase" id="phase">吸って</div>
+      <div class="count" id="count">3</div>
+    </div>
+  </div>
+
+  <main aria-label="FIELD MANUAL 001">
+    <div class="stack">
+      <section class="paper" style="--r:-1.3deg;--d:.02s">
+        <div class="kicker">THE PAN / FIELD MANUAL 001</div>
+        <h1>HOW TO SEE<br>WHAT IS<br>ALREADY THERE</h1>
+        <p>見えていないものを見る練習。</p>
+      </section>
+
+      <section class="paper" style="--r:1.1deg;--d:.12s">
+        <div class="num">01 / BORDER</div>
+        <h2>ものと、それ以外の境界を見る。</h2>
+        <p>まず、ひとつ物を選ぶ。生き物でも、無生物的な物体でもいい。電柱、灰皿、椅子、テーブル、植物、手、顔。</p>
+        <p>物そのものを凝視するのではなく、<strong>物の輪郭のすぐ外側</strong>を見る。「もの」と「それ以外」が接している境目に意識を置く。</p>
+      </section>
+
+      <section class="paper" style="--r:-.7deg;--d:.22s">
+        <div class="num">02 / WAIT</div>
+        <h2>見続ける。</h2>
+        <p>しばらく見続けると、輪郭のまわりにごく薄い揺らぎが見えてくることがある。</p>
+        <p>熱気のようでも、空気の層のようでもあり、ときには<strong>かなり薄い虹色</strong>のにじみのようにも見える。</p>
+        <p>見ようと力むと逃げる。見るというより、気づく。</p>
+      </section>
+
+      <section class="paper" style="--r:1.6deg;--d:.32s">
+        <div class="num">03 / DIFFERENCE</div>
+        <h2>対象によって、揺らぎ方が違う。</h2>
+        <p>電柱や灰皿、椅子、テーブルのような物体のまわりでは、揺らぎは比較的安定して見える。</p>
+        <p>人物ではもっと動的で、変化が速い。</p>
+        <p>植物はその中間にいる。ゆっくりと変化するので、最初の観測対象としていちばん追いやすい。</p>
+      </section>
+
+      <section class="paper" style="--r:-1.2deg;--d:.42s">
+        <div class="num">04 / SKY</div>
+        <h2>その目のまま、夜空を見る。</h2>
+        <p>輪郭の外側を見る感覚に慣れたら、同じ見方のまま夜空を見る。</p>
+        <p>星を探さない。まず、空の中で<strong>揺らぎが動いている場所</strong>を探す。</p>
+        <p>空そのものではなく、空の癖を見る。</p>
+      </section>
+
+      <section class="paper" style="--r:.8deg;--d:.52s">
+        <div class="num">05 / SIGNAL</div>
+        <h2>揺らぎの中心を見る。</h2>
+        <p>明らかに揺らぎが動いている場所を見つけたら、その中心へゆっくり目を合わせる。</p>
+        <p>そこに、小さな光点があることに気づくことがある。最初は星に見える。</p>
+      </section>
+
+      <section class="paper" style="--r:-.4deg;--d:.64s">
+        <div class="kicker">OBSERVATION CONTINUES</div>
+        <div class="question">でも、よく見ると<br>その星は？</div>
+      </section>
+
+      <section class="paper" style="--r:.5deg;--d:.75s">
+        <div class="kicker">FIELD NOTE</div>
+        <p class="note">見え方には個人差がある。判断を急がず、時刻・方向・動き方・色・周囲の星との位置関係を記録する。観測とは、信じることではなく、気づいたことを残すこと。</p>
+      </section>
+    </div>
+    <div class="footer">THE PAN / SAPPORO / EARTH? / 001</div>
+  </main>
+
+  <script>
+    const breath = document.getElementById('breath');
+    const phase = document.getElementById('phase');
+    const count = document.getElementById('count');
+    const started = performance.now();
+
+    function stateAt(sec){
+      if(sec < 3) return {name:'inhale', label:'吸って', remain:3-sec};
+      if(sec < 9) return {name:'hold', label:'止めて', remain:9-sec};
+      if(sec < 16) return {name:'exhale', label:'はいて', remain:16-sec};
+      return {name:'done', label:'', remain:0};
+    }
+
+    let lastName = '';
+    function tick(){
+      const elapsed = (performance.now()-started)/1000;
+      const s = stateAt(elapsed);
+      if(s.name !== lastName){
+        breath.dataset.phase = s.name;
+        phase.textContent = s.label;
+        lastName = s.name;
+      }
+      if(s.name !== 'done') count.textContent = Math.max(1,Math.ceil(s.remain));
+
+      if(elapsed >= 10 && !document.body.classList.contains('reveal')){
+        document.body.classList.add('reveal');
+        breath.classList.add('compact');
+      }
+      if(elapsed >= 16){
+        breath.classList.add('done');
+        return;
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>
