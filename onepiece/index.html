@@ -63,12 +63,31 @@
     .note{font-size:13px;color:var(--muted);line-height:1.75}
     .question{font-size:clamp(31px,8vw,66px);font-weight:700;line-height:1.05;letter-spacing:-.045em}
     .trust-map{
-      position:relative;width:min(420px,82vw);aspect-ratio:1;margin:34px auto 28px;
-      border:2px solid var(--line);border-radius:50%;
+      position:relative;width:min(420px,82vw);aspect-ratio:1;margin:42px auto 36px;
+      overflow:visible;
     }
-    .trust-map::before,.trust-map::after{content:"";position:absolute;background:var(--line)}
+    .map-ring{
+      position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:0;
+    }
+    .map-ring path{fill:none;stroke:var(--line);stroke-width:.55}
+    .trust-map::before,.trust-map::after{content:"";position:absolute;background:var(--line);z-index:1}
     .trust-map::before{width:2px;height:100%;left:50%;top:0;transform:translateX(-50%)}
     .trust-map::after{height:2px;width:100%;left:0;top:50%;transform:translateY(-50%)}
+    .universe-field{
+      position:absolute;right:-17%;top:-16%;width:56%;height:56%;z-index:1;pointer-events:none;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+    .universe-field .zone{
+      position:absolute;right:0;top:7%;width:88%;font-size:10px;font-weight:700;line-height:1.45;
+      letter-spacing:.12em;text-align:right;
+    }
+    .universe-field i{position:absolute;font-style:normal;line-height:1}
+    .universe-field i:nth-child(2){right:8%;top:39%;font-size:18px}
+    .universe-field i:nth-child(3){right:33%;top:57%;font-size:9px}
+    .universe-field i:nth-child(4){right:1%;top:73%;font-size:12px}
+    .universe-field i:nth-child(5){right:55%;top:30%;font-size:7px}
+    .universe-field i:nth-child(6){right:68%;top:63%;font-size:15px}
+    .universe-field i:nth-child(7){right:24%;top:88%;font-size:6px}
     .axis-label{
       position:absolute;background:#fff;padding:3px 7px;font:700 11px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
       letter-spacing:.08em;z-index:2;white-space:nowrap;
@@ -173,7 +192,14 @@
         <h2>人つなぎの地図への<br>方位磁針</h2>
         <p class="note">知ってる ↔ 知らない<br>信じる ↔ 信じない</p>
 
-        <div class="trust-map" role="img" aria-label="人つなぎの地図への方位磁針。知ってる・知らない、信じる・信じないの座標">
+        <div class="trust-map" role="img" aria-label="人つなぎの地図への方位磁針。知らないと信じるが交わる方向だけ、地図の外側へひらいている。">
+          <svg class="map-ring" viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M50 2 A48 48 0 1 0 98 50"></path>
+          </svg>
+          <div class="universe-field" aria-hidden="true">
+            <span class="zone">ここでしか<br>起きえないゾーン</span>
+            <i>✦</i><i>·</i><i>✧</i><i>·</i><i>⊹</i><i>·</i>
+          </div>
           <span class="axis-label axis-top">信じる</span>
           <span class="axis-label axis-bottom">信じない</span>
           <span class="axis-label axis-left">知ってる / 論理思考・学習</span>
