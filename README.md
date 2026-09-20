@@ -15,3 +15,5 @@ npm run build
 ```
 
 Pushes to `main` deploy the generated `dist/` directory to GitHub Pages.
+
+Production deploy path: GitHub `main` → Cloudflare Pages (`thepan` project).
