@@ -62,6 +62,34 @@
     .num{font:700 12px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.15em;margin-bottom:18px}
     .note{font-size:13px;color:var(--muted);line-height:1.75}
     .question{font-size:clamp(31px,8vw,66px);font-weight:700;line-height:1.05;letter-spacing:-.045em}
+    .trust-map{
+      position:relative;width:min(420px,82vw);aspect-ratio:1;margin:34px auto 28px;
+      border:2px solid var(--line);border-radius:50%;
+    }
+    .trust-map::before,.trust-map::after{content:"";position:absolute;background:var(--line)}
+    .trust-map::before{width:2px;height:100%;left:50%;top:0;transform:translateX(-50%)}
+    .trust-map::after{height:2px;width:100%;left:0;top:50%;transform:translateY(-50%)}
+    .axis-label{
+      position:absolute;background:#fff;padding:3px 7px;font:700 11px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      letter-spacing:.08em;z-index:2;white-space:nowrap;
+    }
+    .axis-top{left:50%;top:-10px;transform:translateX(-50%)}
+    .axis-bottom{left:50%;bottom:-10px;transform:translateX(-50%)}
+    .axis-left{left:-18px;top:50%;transform:translate(-50%,-50%) rotate(-90deg)}
+    .axis-right{right:-26px;top:50%;transform:translate(50%,-50%) rotate(90deg)}
+    .quadrant{
+      position:absolute;width:44%;font-size:clamp(12px,3.2vw,16px);line-height:1.45;font-weight:700;
+    }
+    .q-tl{left:5%;top:17%;text-align:center}
+    .q-tr{right:5%;top:17%;text-align:center}
+    .q-bl{left:5%;bottom:17%;text-align:center}
+    .q-br{right:5%;bottom:17%;text-align:center}
+    .quadrant small{display:block;margin-top:6px;font:700 10px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.14em}
+    .relation{
+      margin:26px auto 4px;text-align:center;font-size:clamp(18px,4.8vw,28px);font-weight:700;line-height:1.45;
+    }
+    .relation .swap{display:block;font-size:1.35em;line-height:1.1;margin:8px 0}
+    .fear-line{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);font-weight:700}
     .footer{text-align:center;margin-top:26px;font:700 9px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.2em}
     @media (max-width:560px){
       main{padding-top:88px}
@@ -138,6 +166,31 @@
       <section class="paper" style="--r:.5deg;--d:.75s">
         <div class="kicker">FIELD NOTE</div>
         <p class="note">見え方には個人差がある。判断を急がず、時刻・方向・動き方・色・周囲の星との位置関係を記録する。観測とは、信じることではなく、気づいたことを残すこと。</p>
+      </section>
+
+      <section class="paper" style="--r:-.8deg;--d:.86s">
+        <div class="num">KNOW-HOW 02 / CROSS</div>
+        <h2>知ってる ↔ 知らない<br>信じる ↔ 信じない</h2>
+
+        <div class="trust-map" role="img" aria-label="知ってる・知らない、信じる・信じないの十字座標">
+          <span class="axis-label axis-top">信じる</span>
+          <span class="axis-label axis-bottom">信じない</span>
+          <span class="axis-label axis-left">知ってる</span>
+          <span class="axis-label axis-right">知らない</span>
+
+          <div class="quadrant q-tl">知ってる × 信じる</div>
+          <div class="quadrant q-tr">知らない × 信じる<small>委ね</small></div>
+          <div class="quadrant q-bl">知ってる × 信じない</div>
+          <div class="quadrant q-br">知らない × 信じない<small>恐</small></div>
+        </div>
+
+        <div class="relation">
+          <span>知らない × 信じる（委ね）</span>
+          <span class="swap">⇅</span>
+          <span>知ってる × 信じる</span>
+        </div>
+
+        <p class="fear-line">知らない × 信じない ＝ 恐</p>
       </section>
     </div>
     <div class="footer">THE PAN / SAPPORO / EARTH? / 001</div>
