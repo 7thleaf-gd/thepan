@@ -33,6 +33,10 @@ body {
     var(--ink);
   font-family: var(--body);
   font-weight: 700;
+  font-feature-settings: "palt" 1;
+  font-kerning: normal;
+  letter-spacing: normal;
+  text-rendering: optimizeLegibility;
   /*
    * Clip the wide collage without turning <body> into its own scroll area.
    * With `hidden`, the other axis computes to `auto` and iOS can trap touch
@@ -268,7 +272,7 @@ h1 {
   margin: 0;
   color: var(--violet);
   font-size: clamp(0.88rem, 2.4vw, 1.15rem);
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
 .transmission-button {
@@ -847,7 +851,7 @@ h1 {
   max-width: 37rem;
   margin: 1.3rem 0;
   font-size: clamp(1rem, 2.5vw, 1.3rem);
-  line-height: 1.45;
+  line-height: 1.7;
 }
 
 .physical-note {
@@ -1108,7 +1112,7 @@ h1 {
   margin: 0 0 1.5rem;
   color: var(--pink);
   font-size: clamp(1.05rem, 3vw, 1.45rem);
-  line-height: 1.35;
+  line-height: 1.7;
 }
 
 .card-copy > a {
@@ -1181,7 +1185,7 @@ h1 {
   max-width: 27rem;
   margin: 1.5rem 0 0;
   font-size: clamp(1rem, 3vw, 1.35rem);
-  line-height: 1.45;
+  line-height: 1.7;
 }
 
 .door-grid {
@@ -1730,7 +1734,7 @@ h1 {
   max-width: 32rem;
   margin: 1.75rem 0;
   font-size: clamp(1rem, 2.5vw, 1.3rem);
-  line-height: 1.55;
+  line-height: 1.7;
 }
 
 .zine-copy > a {
