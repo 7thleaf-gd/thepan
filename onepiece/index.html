@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+  <meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
+  <meta name="referrer" content="no-referrer">
+  <title>FIELD MANUAL 001</title>
+  <style>
+    :root{
+      color-scheme: light;
+      --ink:#111;
+      --paper:#fff;
+      --line:#111;
+      --muted:#6b6b6b;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#fff;color:var(--ink);font-family:HelveticaNeue,"Helvetica Neue",Helvetica,Arial,"Yu Gothic","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;font-feature-settings:"palt" 1;font-kerning:normal;letter-spacing:normal;text-rendering:optimizeLegibility}
+    body{overflow-x:hidden}
+    .lang-toggle{
+      position:fixed;top:14px;right:14px;z-index:60;border:1.5px solid var(--line);background:#fff;color:var(--ink);
+      padding:9px 11px;font:700 10px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      letter-spacing:.12em;cursor:pointer;box-shadow:3px 3px 0 var(--line);
+    }
+    .lang-toggle:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--line)}
+    .breath{
+      position:fixed;inset:0;z-index:30;display:grid;place-items:center;
+      background:#fff;transition:opacity .45s ease,background .45s ease;
+    }
+    .breath.compact{
+      inset:auto 14px 14px auto;width:auto;height:auto;background:transparent;
+      place-items:end;pointer-events:none;
+    }
+    .breath.done{opacity:0;pointer-events:none}
+    .breath-card{text-align:center;min-width:180px}
+    .breath.compact .breath-card{text-align:right;min-width:0}
+    .signal{font:700 10px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.18em;margin-bottom:22px}
+    .breath.compact .signal{display:none}
+    .phase{font-size:clamp(22px,6vw,44px);font-weight:700;letter-spacing:.02em;transition:transform 1s ease,opacity .25s ease}
+    .count{margin-top:12px;font:700 12px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.12em}
+    .breath.compact .phase{font-size:13px}
+    .breath.compact .count{font-size:10px;margin-top:4px}
+    .breath[data-phase="inhale"] .phase{animation:inhale 3s ease-in forwards}
+    .breath[data-phase="hold"] .phase{transform:scale(1.08)}
+    .breath[data-phase="exhale"] .phase{animation:exhale 7s ease-out forwards}
+    @keyframes inhale{from{transform:scale(.92)}to{transform:scale(1.08)}}
+    @keyframes exhale{from{transform:scale(1.08)}to{transform:scale(.92)}}
+
+    main{width:min(760px,100%);margin:0 auto;padding:110px 18px 90px;visibility:hidden}
+    body.reveal main{visibility:visible}
+    .stack{display:flex;flex-direction:column;align-items:center}
+    .paper{
+      width:min(680px,100%);background:var(--paper);border:1.5px solid var(--line);
+      padding:clamp(22px,5vw,46px);box-shadow:0 18px 40px rgba(0,0,0,.12);
+      margin:-1px 0 24px;transform:translateY(-125vh) rotate(var(--r,0deg));
+      opacity:.98;transition:transform 1.15s cubic-bezier(.17,.89,.32,1.25),box-shadow .45s ease;
+      transition-delay:var(--d,0s);
+    }
+    body.reveal .paper{transform:translateY(0) rotate(var(--r,0deg))}
+    .paper:nth-child(2n){margin-left:clamp(0px,4vw,34px)}
+    .paper:nth-child(3n){margin-right:clamp(0px,3vw,24px)}
+    .kicker{font:700 10px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase}
+    h1{font-size:clamp(38px,10vw,78px);line-height:.9;margin:16px 0 26px;letter-spacing:-.055em}
+    h2{font-size:clamp(25px,6vw,42px);line-height:1.02;margin:10px 0 22px;letter-spacing:-.035em}
+    p{font-size:clamp(16px,3.8vw,20px);line-height:1.75;margin:0}
+    p+p{margin-top:1em}
+    .num{font:700 12px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.15em;margin-bottom:18px}
+    .note{font-size:13px;color:var(--muted);line-height:1.75}
+    .question{font-size:clamp(31px,8vw,66px);font-weight:700;line-height:1.05;letter-spacing:-.045em}
+    .trust-map{
+      position:relative;width:min(420px,82vw);aspect-ratio:1;margin:42px auto 36px;
+      overflow:visible;
+    }
+    .map-ring{
+      position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:0;
+    }
+    .map-ring path{fill:none;stroke:var(--line);stroke-width:.55}
+    .trust-map::before,.trust-map::after{content:"";position:absolute;background:var(--line);z-index:1}
+    .trust-map::before{width:2px;height:100%;left:50%;top:0;transform:translateX(-50%)}
+    .trust-map::after{height:2px;width:100%;left:0;top:50%;transform:translateY(-50%)}
+    .universe-field{
+      position:absolute;right:-17%;top:-16%;width:56%;height:56%;z-index:1;pointer-events:none;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+    .universe-field .zone{
+      position:absolute;right:0;top:7%;width:88%;font-size:10px;font-weight:700;line-height:1.45;
+      letter-spacing:.12em;text-align:right;
+    }
+    .universe-field i{position:absolute;font-style:normal;line-height:1}
+    .universe-field i:nth-child(2){right:8%;top:39%;font-size:18px}
+    .universe-field i:nth-child(3){right:33%;top:57%;font-size:9px}
+    .universe-field i:nth-child(4){right:1%;top:73%;font-size:12px}
+    .universe-field i:nth-child(5){right:55%;top:30%;font-size:7px}
+    .universe-field i:nth-child(6){right:68%;top:63%;font-size:15px}
+    .universe-field i:nth-child(7){right:24%;top:88%;font-size:6px}
+    .axis-label{
+      position:absolute;background:#fff;padding:3px 7px;font:700 11px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      letter-spacing:.08em;z-index:2;white-space:nowrap;
+    }
+    .axis-top{left:50%;top:-10px;transform:translateX(-50%)}
+    .axis-bottom{left:50%;bottom:-10px;transform:translateX(-50%)}
+    .axis-left{left:-18px;top:50%;transform:translate(-50%,-50%) rotate(-90deg)}
+    .axis-right{right:-26px;top:50%;transform:translate(50%,-50%) rotate(90deg)}
+    .quadrant{
+      position:absolute;width:44%;font-size:clamp(12px,3.2vw,16px);line-height:1.45;font-weight:700;
+    }
+    .q-tl{left:5%;top:17%;text-align:center}
+    .q-tr{right:5%;top:17%;text-align:center}
+    .q-bl{left:5%;bottom:17%;text-align:center}
+    .q-br{right:5%;bottom:17%;text-align:center}
+    .quadrant small{display:block;margin-top:6px;font:700 10px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.14em}
+    .relation{
+      margin:26px auto 4px;text-align:center;font-size:clamp(18px,4.8vw,28px);font-weight:700;line-height:1.45;
+    }
+    .relation .swap{display:block;font-size:1.35em;line-height:1.1;margin:8px 0}
+    .fear-line{margin-top:24px;padding-top:20px;border-top:1px solid var(--line);font-weight:700}
+    .footer{text-align:center;margin-top:26px;font:700 9px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.2em}
+    @media (max-width:560px){
+      main{padding-top:88px}
+      .paper{padding:24px 20px;margin-bottom:17px}
+      .paper:nth-child(n){margin-left:0;margin-right:0}
+    }
+    @media (prefers-reduced-motion:reduce){
+      .phase{animation:none!important}
+      .paper{transition:opacity .3s ease;transform:none!important;opacity:0}
+      body.reveal .paper{opacity:1}
+    }
+  </style>
+</head>
+<body>
+  <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch language">EN</button>
+  <div class="breath" id="breath" data-phase="inhale" aria-live="polite">
+    <div class="breath-card">
+      <div class="signal" data-i18n="signal">見ようとせず、見る。</div>
+      <div class="phase" id="phase">吸って</div>
+      <div class="count" id="count">3</div>
+    </div>
+  </div>
+
+  <main aria-label="FIELD MANUAL 001">
+    <div class="stack">
+      <section class="paper" style="--r:-1.3deg;--d:.02s">
+        <div class="kicker">THE PAN / FIELD MANUAL 001</div>
+        <h1>HOW TO SEE<br>WHAT IS<br>ALREADY THERE</h1>
+        <p data-i18n="intro">見えていないものを見る練習。</p>
+      </section>
+
+      <section class="paper" style="--r:1.1deg;--d:.12s">
+        <div class="num">01 / BORDER</div>
+        <h2 data-i18n="borderTitle">ものと、それ以外の境界を見る。</h2>
+        <p data-i18n="borderP1">まず、ひとつ物を選ぶ。生き物でも、無生物的な物体でもいい。電柱、灰皿、椅子、テーブル、植物、手、顔。</p>
+        <p data-i18n="borderP2">物そのものを凝視するのではなく、<strong>物の輪郭のすぐ外側</strong>を見る。「もの」と「それ以外」が接している境目に意識を置く。</p>
+      </section>
+
+      <section class="paper" style="--r:-.7deg;--d:.22s">
+        <div class="num">02 / WAIT</div>
+        <h2 data-i18n="waitTitle">見続ける。</h2>
+        <p data-i18n="waitP1">しばらく見続けると、輪郭のまわりにごく薄い揺らぎが見えてくることがある。</p>
+        <p data-i18n="waitP2">熱気のようでも、空気の層のようでもあり、ときには<strong>かなり薄い虹色</strong>のにじみのようにも見える。</p>
+        <p data-i18n="waitP3">見ようと力むと逃げる。見るというより、気づく。</p>
+      </section>
+
+      <section class="paper" style="--r:1.6deg;--d:.32s">
+        <div class="num">03 / DIFFERENCE</div>
+        <h2 data-i18n="differenceTitle">対象によって、揺らぎ方が違う。</h2>
+        <p data-i18n="differenceP1">電柱や灰皿、椅子、テーブルのような物体のまわりでは、揺らぎは比較的安定して見える。</p>
+        <p data-i18n="differenceP2">人物ではもっと動的で、変化が速い。</p>
+        <p data-i18n="differenceP3">植物はその中間にいる。ゆっくりと変化するので、最初の観測対象としていちばん追いやすい。</p>
+      </section>
+
+      <section class="paper" style="--r:-1.2deg;--d:.42s">
+        <div class="num">04 / SKY</div>
+        <h2 data-i18n="skyTitle">その目のまま、夜空を見る。</h2>
+        <p data-i18n="skyP1">輪郭の外側を見る感覚に慣れたら、同じ見方のまま夜空を見る。</p>
+        <p data-i18n="skyP2">星を探さない。まず、空の中で<strong>揺らぎが動いている場所</strong>を探す。</p>
+        <p data-i18n="skyP3">空そのものではなく、空の癖を見る。</p>
+      </section>
+
+      <section class="paper" style="--r:.8deg;--d:.52s">
+        <div class="num">05 / SIGNAL</div>
+        <h2 data-i18n="signalTitle">揺らぎの中心を見る。</h2>
+        <p data-i18n="signalP1">明らかに揺らぎが動いている場所を見つけたら、その中心へゆっくり目を合わせる。</p>
+        <p data-i18n="signalP2">そこに、小さな光点があることに気づくことがある。最初は星に見える。</p>
+      </section>
+
+      <section class="paper" style="--r:-.4deg;--d:.64s">
+        <div class="kicker">OBSERVATION CONTINUES</div>
+        <div class="question" data-i18n="question">でも、よく見ると<br>その星は？</div>
+      </section>
+
+      <section class="paper" style="--r:.5deg;--d:.75s">
+        <div class="kicker">FIELD NOTE</div>
+        <p class="note" data-i18n="fieldNote">見え方には個人差がある。判断を急がず、時刻・方向・動き方・色・周囲の星との位置関係を記録する。観測とは、信じることではなく、気づいたことを残すこと。</p>
+      </section>
+
+      <section class="paper" style="--r:-.8deg;--d:.86s">
+        <div class="num">KNOW-HOW 02 / COMPASS</div>
+        <h2 data-i18n="compassTitle">人つなぎの地図への<br>方位磁針</h2>
+        <p class="note" data-i18n="compassAxes">知ってる ↔ 知らない<br>信じる ↔ 信じない</p>
+
+        <div class="trust-map" role="img" aria-label="人つなぎの地図への方位磁針。知らないと信じるが交わる方向だけ、地図の外側へひらいている。">
+          <svg class="map-ring" viewBox="0 0 100 100" aria-hidden="true">
+            <path d="M50 2 A48 48 0 1 0 98 50"></path>
+          </svg>
+          <div class="universe-field" aria-hidden="true">
+            <span class="zone" data-i18n="zone">ここでしか<br>起きえないゾーン</span>
+            <i>✦</i><i>·</i><i>✧</i><i>·</i><i>⊹</i><i>·</i>
+          </div>
+          <span class="axis-label axis-top" data-i18n="believe">信じる</span>
+          <span class="axis-label axis-bottom" data-i18n="notBelieve">信じない</span>
+          <span class="axis-label axis-left" data-i18n="knownSide">知ってる / 論理思考・学習</span>
+          <span class="axis-label axis-right" data-i18n="unknownSide">知らない / 直感的思考</span>
+
+          <div class="quadrant q-tl" data-i18n="knownBelieve">知ってる × 信じる</div>
+          <div class="quadrant q-tr" data-i18n="unknownBelieve">知らない × 信じる<small>委ね</small></div>
+          <div class="quadrant q-bl" data-i18n="knownNotBelieve">知ってる × 信じない</div>
+          <div class="quadrant q-br" data-i18n="unknownNotBelieve">知らない × 信じない<small>恐</small></div>
+        </div>
+
+        <div class="relation">
+          <span data-i18n="relationTop">知らない × 信じる（委ね）</span>
+          <span class="swap">⇅</span>
+          <span data-i18n="relationBottom">知ってる × 信じる</span>
+        </div>
+
+        <p class="fear-line" data-i18n="fearLine">知らない × 信じない ＝ 恐</p>
+      </section>
+    </div>
+    <div class="footer">THE PAN / SAPPORO / EARTH? / 001</div>
+  </main>
+
+  <script>
+    const translations = {
+      ja: {
+        signal: '見ようとせず、見る。',
+        intro: '見えていないものを見る練習。',
+        borderTitle: 'ものと、それ以外の境界を見る。',
+        borderP1: 'まず、ひとつ物を選ぶ。生き物でも、無生物的な物体でもいい。電柱、灰皿、椅子、テーブル、植物、手、顔。',
+        borderP2: '物そのものを凝視するのではなく、<strong>物の輪郭のすぐ外側</strong>を見る。「もの」と「それ以外」が接している境目に意識を置く。',
+        waitTitle: '見続ける。',
+        waitP1: 'しばらく見続けると、輪郭のまわりにごく薄い揺らぎが見えてくることがある。',
+        waitP2: '熱気のようでも、空気の層のようでもあり、ときには<strong>かなり薄い虹色</strong>のにじみのようにも見える。',
+        waitP3: '見ようと力むと逃げる。見るというより、気づく。',
+        differenceTitle: '対象によって、揺らぎ方が違う。',
+        differenceP1: '電柱や灰皿、椅子、テーブルのような物体のまわりでは、揺らぎは比較的安定して見える。',
+        differenceP2: '人物ではもっと動的で、変化が速い。',
+        differenceP3: '植物はその中間にいる。ゆっくりと変化するので、最初の観測対象としていちばん追いやすい。',
+        skyTitle: 'その目のまま、夜空を見る。',
+        skyP1: '輪郭の外側を見る感覚に慣れたら、同じ見方のまま夜空を見る。',
+        skyP2: '星を探さない。まず、空の中で<strong>揺らぎが動いている場所</strong>を探す。',
+        skyP3: '空そのものではなく、空の癖を見る。',
+        signalTitle: '揺らぎの中心を見る。',
+        signalP1: '明らかに揺らぎが動いている場所を見つけたら、その中心へゆっくり目を合わせる。',
+        signalP2: 'そこに、小さな光点があることに気づくことがある。最初は星に見える。',
+        question: 'でも、よく見ると<br>その星は？',
+        fieldNote: '見え方には個人差がある。判断を急がず、時刻・方向・動き方・色・周囲の星との位置関係を記録する。観測とは、信じることではなく、気づいたことを残すこと。',
+        compassTitle: '人つなぎの地図への<br>方位磁針',
+        compassAxes: '知ってる ↔ 知らない<br>信じる ↔ 信じない',
+        zone: 'ここでしか<br>起きえないゾーン',
+        believe: '信じる',
+        notBelieve: '信じない',
+        knownSide: '知ってる / 論理思考・学習',
+        unknownSide: '知らない / 直感的思考',
+        knownBelieve: '知ってる × 信じる',
+        unknownBelieve: '知らない × 信じる<small>委ね</small>',
+        knownNotBelieve: '知ってる × 信じない',
+        unknownNotBelieve: '知らない × 信じない<small>恐</small>',
+        relationTop: '知らない × 信じる（委ね）',
+        relationBottom: '知ってる × 信じる',
+        fearLine: '知らない × 信じない ＝ 恐'
+      },
+      en: {
+        signal: 'LOOK WITHOUT LOOKING.',
+        intro: 'A practice for seeing what you do not yet see.',
+        borderTitle: 'Look at the boundary between a thing and everything else.',
+        borderP1: 'Choose one thing. It can be living or inanimate: a utility pole, ashtray, chair, table, plant, hand, face.',
+        borderP2: 'Do not stare at the object itself. Look <strong>just outside its outline</strong>. Place your attention where “the thing” meets “everything else.”',
+        waitTitle: 'Keep looking.',
+        waitP1: 'After a while, you may begin to notice an extremely faint shimmer around the outline.',
+        waitP2: 'It may look like heat, a layer of air, or sometimes a <strong>very faint rainbow-like</strong> haze.',
+        waitP3: 'Strain to see it and it slips away. Do not force the seeing. Notice.',
+        differenceTitle: 'The shimmer behaves differently around different things.',
+        differenceP1: 'Around objects such as utility poles, ashtrays, chairs, and tables, the shimmer tends to appear relatively stable.',
+        differenceP2: 'Around people it is more dynamic, changing quickly.',
+        differenceP3: 'Plants sit somewhere between. They change slowly, which makes them one of the easiest places to begin observing.',
+        skyTitle: 'With the same eyes, look at the night sky.',
+        skyP1: 'Once you are used to looking just outside an outline, carry the same way of seeing into the night sky.',
+        skyP2: 'Do not search for stars. First, look for <strong>places where the shimmer is moving</strong>.',
+        skyP3: 'Do not look at the sky itself. Look for the sky’s habits.',
+        signalTitle: 'Look at the center of the shimmer.',
+        signalP1: 'When you find a place where the shimmer is clearly moving, slowly bring your eyes toward its center.',
+        signalP2: 'You may notice a tiny point of light there. At first, it looks like a star.',
+        question: 'But if you look closely,<br>is that really a star?',
+        fieldNote: 'What people see varies. Do not rush to a conclusion. Record the time, direction, movement, color, and position relative to nearby stars. Observation is not belief. It is leaving a record of what you noticed.',
+        compassTitle: 'A COMPASS FOR THE MAP<br>THAT CONNECTS PEOPLE',
+        compassAxes: 'KNOW ↔ DON’T KNOW<br>BELIEVE ↔ DON’T BELIEVE',
+        zone: 'A ZONE WHERE THIS<br>CAN ONLY HAPPEN',
+        believe: 'BELIEVE',
+        notBelieve: 'DON’T BELIEVE',
+        knownSide: 'KNOW / LOGIC & LEARNING',
+        unknownSide: 'DON’T KNOW / INTUITIVE THINKING',
+        knownBelieve: 'KNOW × BELIEVE',
+        unknownBelieve: 'DON’T KNOW × BELIEVE<small>SURRENDER</small>',
+        knownNotBelieve: 'KNOW × DON’T BELIEVE',
+        unknownNotBelieve: 'DON’T KNOW × DON’T BELIEVE<small>FEAR</small>',
+        relationTop: 'DON’T KNOW × BELIEVE (SURRENDER)',
+        relationBottom: 'KNOW × BELIEVE',
+        fearLine: 'DON’T KNOW × DON’T BELIEVE = FEAR'
+      }
+    };
+
+    const langToggle = document.getElementById('lang-toggle');
+    let currentLang = localStorage.getItem('onepiece-lang') === 'en' ? 'en' : 'ja';
+
+    function applyLanguage(lang){
+      currentLang = lang;
+      document.documentElement.lang = lang;
+      document.querySelectorAll('[data-i18n]').forEach(node => {
+        const value = translations[lang][node.dataset.i18n];
+        if(value != null) node.innerHTML = value;
+      });
+      const map = document.querySelector('.trust-map');
+      if(map){
+        map.setAttribute('aria-label', lang === 'ja'
+          ? '人つなぎの地図への方位磁針。知らないと信じるが交わる方向だけ、地図の外側へひらいている。'
+          : 'A compass for the map that connects people. Only the direction where not knowing meets believing opens beyond the map.');
+      }
+      langToggle.textContent = lang === 'ja' ? 'EN' : '日本語';
+      langToggle.setAttribute('aria-label', lang === 'ja' ? 'Switch to English' : '日本語に切り替える');
+      localStorage.setItem('onepiece-lang', lang);
+      if(lastName && lastName !== 'done') phase.textContent = phaseLabels[lang][lastName];
+    }
+
+    const breath = document.getElementById('breath');
+    const phase = document.getElementById('phase');
+    const count = document.getElementById('count');
+    const phaseLabels = {
+      ja: { inhale:'吸って', hold:'止めて', exhale:'はいて' },
+      en: { inhale:'INHALE', hold:'HOLD', exhale:'EXHALE' }
+    };
+    const started = performance.now();
+
+    function stateAt(sec){
+      if(sec < 3) return {name:'inhale', remain:3-sec};
+      if(sec < 9) return {name:'hold', remain:9-sec};
+      if(sec < 16) return {name:'exhale', remain:16-sec};
+      return {name:'done', remain:0};
+    }
+
+    let lastName = '';
+    langToggle.addEventListener('click', () => applyLanguage(currentLang === 'ja' ? 'en' : 'ja'));
+    applyLanguage(currentLang);
+    function tick(){
+      const elapsed = (performance.now()-started)/1000;
+      const s = stateAt(elapsed);
+      if(s.name !== lastName){
+        breath.dataset.phase = s.name;
+        phase.textContent = phaseLabels[currentLang][s.name];
+        lastName = s.name;
+      }
+      if(s.name !== 'done') count.textContent = Math.max(1,Math.ceil(s.remain));
+
+      if(elapsed >= 10 && !document.body.classList.contains('reveal')){
+        document.body.classList.add('reveal');
+        breath.classList.add('compact');
+      }
+      if(elapsed >= 16){
+        breath.classList.add('done');
+        return;
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>
