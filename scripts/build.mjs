@@ -4,8 +4,8 @@ import { resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 const output = resolve(root, 'dist');
-const files = ['index.html', 'styles-v2.css', 'script.js', 'robots.txt', 'sitemap.xml', '65c4754752b477da0dafffbca6277852.txt'];
-const directories = ['assets', 'onepiece'];
+const files = ['index.html', 'styles-v2.css', 'signal-pages.css', 'script.js', 'robots.txt', 'sitemap.xml', '65c4754752b477da0dafffbca6277852.txt'];
+const directories = ['assets', 'onepiece', 'discover'];
 
 for (const file of files) {
   await access(resolve(root, file), constants.R_OK);
