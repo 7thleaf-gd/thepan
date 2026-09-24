@@ -14,6 +14,8 @@ Build the static output:
 npm run build
 ```
 
-Pushes to `main` deploy the generated `dist/` directory to GitHub Pages.
+Pushes to `main` deploy through the Cloudflare Pages Git integration.
 
 Production deploy path: GitHub `main` → Cloudflare Pages (`thepan` project).
+
+GitHub Actions and CircleCI are not production deploy executors for this site. They must not be added as a required publish step.
