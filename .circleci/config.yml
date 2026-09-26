@@ -1,0 +1,53 @@
+version: 2.1
+
+jobs:
+  deploy-production:
+    docker:
+      - image: cimg/node:24.8
+    resource_class: small
+    environment:
+      CF_PAGES_PROJECT: "thepan"
+      PRODUCTION_URL: "https://thepan.xyz/"
+      PUBLISH_DIR: "dist"
+    steps:
+      - checkout
+      - run:
+          name: Build
+          command: |
+            set -euo pipefail
+            npm run build
+            test -d "$PUBLISH_DIR"
+      - run:
+          name: Deploy to Cloudflare Pages
+          command: |
+            set -euo pipefail
+            : "${CLOUDFLARE_API_TOKEN:?CLOUDFLARE_API_TOKEN is required}"
+            : "${CLOUDFLARE_ACCOUNT_ID:?CLOUDFLARE_ACCOUNT_ID is required}"
+            npx --yes wrangler@4.137.0 pages deploy "$PUBLISH_DIR" \
+              --project-name="$CF_PAGES_PROJECT" \
+              --branch=main \
+              --commit-hash="$CIRCLE_SHA1"
+      - run:
+          name: Production readback
+          command: |
+            set -euo pipefail
+            for i in $(seq 1 30); do
+              body="$(curl -fsS --max-time 15 "$PRODUCTION_URL" || true)"
+              if printf '%s' "$body" | grep -Fq 'FIVE WAYS IN' &&
+                 ! printf '%s' "$body" | grep -Fq 'Music, moving images, SPACE ZINE, browser tools, and the Sapporo context behind THE PAN.'; then
+                echo "THEPAN_PRODUCTION_READBACK=PASS"
+                exit 0
+              fi
+              sleep 4
+            done
+            exit 33
+
+workflows:
+  production:
+    jobs:
+      - deploy-production:
+          context: 7thleaf-studios-deploy
+          serial-group: << pipeline.project.slug >>/production
+          filters:
+            branches:
+              only: main
