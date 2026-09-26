@@ -2,39 +2,41 @@
 
 Status: CURRENT
 Authority: `7thleaf-gd/thepan`
-Production branch: `main`
+Source branch: `main`
+Production publish branch: `gh-pages`
 Production hostname: `thepan.xyz`
-Deploy provider: Cloudflare Pages
 
 ## Canonical deploy path
 
 ```text
 GitHub main
-  -> Cloudflare Pages Git integration
-  -> npm run build
-  -> dist/
+  -> static production files
+  -> direct sync to gh-pages via GitHub API
+  -> GitHub Pages
   -> thepan.xyz
 ```
 
 ## Fixed rules
 
-- Normal deploy is the simple path above.
-- Push / merge to `main` is the production deploy trigger.
-- No CircleCI deploy path.
-- No GitHub Actions deploy path.
-- No `gh-pages` production path. The branch is legacy only and must not be synchronized or used for release.
-- No local / DC / RDC dependency for normal deploys.
-- No manual trigger commits.
-- Do not invent an additional deploy lane.
-- Production closeout requires readback from `https://thepan.xyz/`.
+- This project uses the simple static deploy path above.
+- No CircleCI deploy dependency.
+- No GitHub Actions workflow dependency.
+- No local / DC / RDC dependency.
+- No manual empty trigger commits.
+- Do not assume Cloudflare Pages Git integration unless it is independently verified.
+- `gh-pages` is the active publish surface while GitHub Pages remains enabled.
+- Production closeout requires the publish files on `gh-pages` to match the intended `main` static output.
 
 ## Build contract
 
 - Build command: `npm run build`
 - Output directory: `dist/`
 - Build implementation: `scripts/build.mjs`
+- Current site is static; deploy only the production output that changed.
 
-## Current source
+## Current deployment evidence
 
-- Latest intended source: `main`
-- UI change: PR #20 — thin `FIVE WAYS IN` sitemap before the footer.
+- GitHub repository reports Pages enabled.
+- Latest UI change: PR #20 — thin `FIVE WAYS IN` sitemap before the footer.
+- Production sync performed for `index.html` and `styles-v2.css`.
+- `main` and `gh-pages` blob SHAs match for both changed production files.
