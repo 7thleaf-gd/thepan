@@ -81,17 +81,24 @@ workflows:
           filters:
             branches:
               only: main
-      - pages-access:
+      - pages-list-access:
           context: 7thleaf-studios-deploy
           requires:
             - cloudflare-auth
           filters:
             branches:
               only: main
+      - pages-project-access:
+          context: 7thleaf-studios-deploy
+          requires:
+            - pages-list-access
+          filters:
+            branches:
+              only: main
       - deploy-production:
           context: 7thleaf-studios-deploy
           requires:
-            - pages-access
+            - pages-project-access
           serial-group: << pipeline.project.slug >>/production
           filters:
             branches:
