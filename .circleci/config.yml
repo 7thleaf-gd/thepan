@@ -3,13 +3,12 @@ version: 2.1
 jobs:
   deploy-production:
     docker:
-      - image: cimg/node:24.8
+      - image: cimg/python:3.13-node
     resource_class: small
     environment:
-      CLOUDFLARE_ACCOUNT_ID: "85c112de7152c89bb5ea84fdcb397e41"
       CF_PAGES_PROJECT: "thepan"
-      PUBLISH_DIR: "dist"
       PRODUCTION_URL: "https://thepan.xyz/"
+      PUBLISH_DIR: "dist"
     steps:
       - checkout
       - run:
@@ -19,14 +18,12 @@ jobs:
             npm run build
             test -d "$PUBLISH_DIR"
       - run:
-          name: Deploy
+          name: Deploy through canonical Cloudflare credential broker
           command: |
             set -euo pipefail
-            : "${CLOUDFLARE_API_TOKEN:?CLOUDFLARE_API_TOKEN is required}"
-            npx --yes wrangler@4.141.0 pages deploy "$PUBLISH_DIR" \
-              --project-name="$CF_PAGES_PROJECT" \
-              --branch=main \
-              --commit-hash="$CIRCLE_SHA1"
+            : "${CIRCLE_OIDC_TOKEN_V2:?CircleCI OIDC token required}"
+            python -m pip install --user --disable-pip-version-check blake3==1.0.8 >/dev/null
+            python scripts/pages-relay-deploy.py "$PUBLISH_DIR"
       - run:
           name: Production readback
           command: |
@@ -46,7 +43,6 @@ workflows:
   production:
     jobs:
       - deploy-production:
-          context: 7thleaf-studios-deploy
           serial-group: << pipeline.project.slug >>/production
           filters:
             branches:
