@@ -8,8 +8,8 @@ jobs:
     environment:
       CLOUDFLARE_ACCOUNT_ID: "85c112de7152c89bb5ea84fdcb397e41"
       CF_PAGES_PROJECT: "thepan"
-      PUBLISH_DIR: "dist"
       PRODUCTION_URL: "https://thepan.xyz/"
+      PUBLISH_DIR: "dist"
     steps:
       - checkout
       - run:
@@ -23,10 +23,7 @@ jobs:
           command: |
             set -euo pipefail
             : "${CLOUDFLARE_API_TOKEN:?CLOUDFLARE_API_TOKEN is required}"
-            npx --yes wrangler@4.141.0 pages deploy "$PUBLISH_DIR" \
-              --project-name="$CF_PAGES_PROJECT" \
-              --branch=main \
-              --commit-hash="$CIRCLE_SHA1"
+            npx --yes wrangler@4.141.0 pages deploy "$PUBLISH_DIR"               --project-name="$CF_PAGES_PROJECT"               --branch=main               --commit-hash="$CIRCLE_SHA1"
       - run:
           name: Production readback
           command: |
