@@ -17,21 +17,39 @@ jobs:
           command: |
             set -euo pipefail
             : "${CLOUDFLARE_API_TOKEN:?CLOUDFLARE_API_TOKEN is required}"
-            curl -fsS "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/tokens/verify"               -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"               -o /tmp/token.json
+            curl -fsS "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/tokens/verify" \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -o /tmp/token.json
             node -e 'const d=require("/tmp/token.json"); if(!d.success || d.result?.status!=="active") process.exit(1)'
 
-  pages-access:
+  pages-list-access:
+    executor: node
+    environment:
+      CLOUDFLARE_ACCOUNT_ID: "85c112de7152c89bb5ea84fdcb397e41"
+    steps:
+      - run:
+          name: Verify Pages list access
+          command: |
+            set -euo pipefail
+            curl -fsS "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects" \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -o /tmp/pages-list.json
+            node -e 'const d=require("/tmp/pages-list.json"); if(!d.success || !Array.isArray(d.result)) process.exit(1)'
+
+  pages-project-access:
     executor: node
     environment:
       CLOUDFLARE_ACCOUNT_ID: "85c112de7152c89bb5ea84fdcb397e41"
       CF_PAGES_PROJECT: "thepan"
     steps:
       - run:
-          name: Verify Pages project access
+          name: Verify THE PAN Pages project access
           command: |
             set -euo pipefail
-            curl -fsS "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$CF_PAGES_PROJECT"               -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN"               -o /tmp/pages.json
-            node -e 'const d=require("/tmp/pages.json"); if(!d.success || d.result?.name!=="thepan") process.exit(1)'
+            curl -fsS "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$CF_PAGES_PROJECT" \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              -o /tmp/pages-project.json
+            node -e 'const d=require("/tmp/pages-project.json"); if(!d.success || d.result?.name!=="thepan") process.exit(1)'
 
   deploy-production:
     executor: node
@@ -51,7 +69,10 @@ jobs:
           name: Deploy to Cloudflare Pages
           command: |
             set -euo pipefail
-            npx --yes wrangler@4.141.0 pages deploy "$PUBLISH_DIR"               --project-name="$CF_PAGES_PROJECT"               --branch=main               --commit-hash="$CIRCLE_SHA1"
+            npx --yes wrangler@4.141.0 pages deploy "$PUBLISH_DIR" \
+              --project-name="$CF_PAGES_PROJECT" \
+              --branch=main \
+              --commit-hash="$CIRCLE_SHA1"
 
   production-readback:
     executor: node
