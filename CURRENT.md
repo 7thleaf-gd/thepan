@@ -22,12 +22,16 @@ GitHub main
 
 ## Fixed rules
 
-- CircleCI is the production deploy authority.
-- GitHub Actions is not used for normal production deploys.
-- GitHub-hosted runners are not required.
-- `gh-pages` is legacy and not the production authority.
+- CircleCI is the only normal production deploy executor.
+- CircleCI context: `7thleaf-studios-deploy`.
+- Cloudflare credential: scoped `CLOUDFLARE_API_TOKEN` only.
+- Global API Key must not be stored as a deploy credential.
+- Cloudflare Git Integration is not the production authority.
+- GitHub Actions and `gh-pages` are not production deploy paths.
+- Account Switcher is not a deployment executor.
 - No local / DC / RDC dependency for normal deploys.
-- No alternate deploy lane may be invented.
+- DC is repair/recovery only.
+- No alternate deploy lane may be added beside this path.
 - Production is complete only after readback from `https://thepan.xyz/` passes.
 
 ## Current UI target

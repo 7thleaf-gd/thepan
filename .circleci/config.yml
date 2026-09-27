@@ -23,7 +23,7 @@ jobs:
             set -euo pipefail
             : "${CLOUDFLARE_API_TOKEN:?CLOUDFLARE_API_TOKEN is required}"
             : "${CLOUDFLARE_ACCOUNT_ID:?CLOUDFLARE_ACCOUNT_ID is required}"
-            npx --yes wrangler@4.137.0 pages deploy "$PUBLISH_DIR" \
+            npx --yes wrangler@4.141.0 pages deploy "$PUBLISH_DIR" \
               --project-name="$CF_PAGES_PROJECT" \
               --branch=main \
               --commit-hash="$CIRCLE_SHA1"
