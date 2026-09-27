@@ -20,7 +20,8 @@ npm run build
 GitHub main
   -> CircleCI
   -> npm run build
-  -> Cloudflare Pages direct upload
+  -> CircleCI OIDC -> account-switch-bridge (credential broker)
+  -> Cloudflare Pages
   -> thepan
   -> https://thepan.xyz/
   -> production readback
@@ -31,11 +32,12 @@ Deployment authority is `.circleci/config.yml` using CircleCI context `7thleaf-s
 ### Locked rules
 
 - Normal deploys use only CircleCI -> Cloudflare Pages.
-- `CLOUDFLARE_API_TOKEN` is the only Cloudflare production credential used by the deploy job.
-- Global API Key is not a production credential and must not be stored in CircleCI.
+- CircleCI does not store the Cloudflare MAIN credential for Pages.
+- CircleCI authenticates to `account-switch-bridge` with OIDC; the bridge is credential custody only, not a second deploy executor.
+- `scripts/pages-relay-deploy.py` is the sole Pages transport client for this repository.
 - Cloudflare Git Integration is not the production deploy authority.
 - GitHub Actions / `gh-pages` are not production deploy paths.
-- Account Switcher is not a production deploy path.
+- Direct Cloudflare API-token/Global-Key deployment from this repository is not a production deploy path.
 - Mac / DC / RDC is recovery only and must not be required for normal deploys.
-- Do not add another production executor without explicitly replacing this authority.
+- Do not add direct Wrangler/API-token deploy, Cloudflare Git Integration, GitHub Actions deploy, or another relay beside this path.
 - A deploy is incomplete until live readback from `https://thepan.xyz/` passes.
