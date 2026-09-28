@@ -39,3 +39,10 @@ GitHub main
 - `FIVE WAYS IN` is a quiet single-row sitemap before the footer.
 - No giant five-card version.
 - No long descriptive copy above that sitemap.
+
+## Chappy 0002 production verification
+
+- Executor trace: `CHAPPY-0002-GD-DEPLOY-20260929-THEPAN`
+- Shared CircleCI context: `7thleaf-studios-deploy`
+- Shared Cloudflare credential was replaced with a long-lived CI API token before this verification run.
+- Verification target: CircleCI deploy -> `https://thepan.xyz/` -> production readback.
